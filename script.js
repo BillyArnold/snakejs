@@ -48,6 +48,7 @@ class Board {
 //check collisions
 //move snake in current direction
 //track current directions and change current directions using arrows
+
 class Snake {
   constructor() {
     this.body = [{ x: 10, y: 10 }];
