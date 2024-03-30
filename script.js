@@ -15,7 +15,7 @@ class Board {
   }
 
   drawGrid(snakeBody) {
-    console.log("draw grid", snakeBody);
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear the canvas
     for (let i = 0; i <= this.rows; i++) {
       this.context.moveTo(0, i * this.cellSize);
       this.context.lineTo(this.canvas.width, i * this.cellSize);
@@ -65,12 +65,13 @@ class SnakeGame {
     this.board = new Board("myCanvas");
     this.snake = new Snake();
     this.interval = setInterval(this.update.bind(this), 100);
+    this.update();
   }
 
   update() {
-    console.log("updating game");
-    const context = this.board.context;
-    this.board.drawGrid();
+    const snakeBody = this.snake.getBody();
+    console.log("tesitngbodh", snakeBody);
+    this.board.drawGrid(snakeBody);
   }
 }
 
