@@ -5,6 +5,7 @@ class Board {
     this.cellSize = 20;
     this.rows = 20;
     this.cols = 20;
+    this.snakeBody = [];
     this.initialize();
   }
 
@@ -14,7 +15,10 @@ class Board {
     this.drawGrid();
   }
 
-  drawGrid(snakeBody) {
+  setSnakeBody(snakeBody) {
+    this.snakeBody = snakeBody;
+  }
+  drawGrid() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear the canvas
     for (let i = 0; i <= this.rows; i++) {
       this.context.moveTo(0, i * this.cellSize);
@@ -30,7 +34,7 @@ class Board {
     this.context.stroke();
 
     this.context.fillStyle = "green";
-    snakeBody.forEach((segment) => {
+    this.snakeBody.forEach((segment) => {
       this.context.fillRect(
         segment.x * this.cellSize,
         segment.y * this.cellSize,
@@ -69,9 +73,8 @@ class SnakeGame {
   }
 
   update() {
-    const snakeBody = this.snake.getBody();
-    console.log("tesitngbodh", snakeBody);
-    this.board.drawGrid(snakeBody);
+    this.board.setSnakeBody(this.snake.getBody());
+    this.board.drawGrid();
   }
 }
 
