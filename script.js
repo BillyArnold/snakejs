@@ -18,6 +18,7 @@ class Board {
   setSnakeBody(snakeBody) {
     this.snakeBody = snakeBody;
   }
+
   drawGrid() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear the canvas
     for (let i = 0; i <= this.rows; i++) {
@@ -67,6 +68,17 @@ class Snake {
     return this.direction;
   }
 
+  changeDirection(newDirection) {
+    if (
+      (this.direction === "up" && newDirection !== "down") ||
+      (this.direction === "down" && newDirection !== "up") ||
+      (this.direction === "left" && newDirection !== "right") ||
+      (this.direction === "right" && newDirection !== "left")
+    ) {
+      this.direction = newDirection;
+    }
+  }
+
   updateBody() {
     for (let i = 0; i < this.body.length; i++) {
       switch (this.direction) {
@@ -93,6 +105,7 @@ class SnakeGame {
     this.board = new Board("myCanvas");
     this.snake = new Snake();
     this.interval = setInterval(this.update.bind(this), 100);
+    this.bindEvents();
     this.update();
   }
 
@@ -100,6 +113,29 @@ class SnakeGame {
     this.snake.updateBody();
     this.board.setSnakeBody(this.snake.getBody());
     this.board.drawGrid();
+  }
+
+  bindEvents() {
+    document.addEventListener("keydown", (event) => {
+      this.handleKeyDown(event);
+    });
+  }
+
+  handleKeyDown(event) {
+    switch (event.key) {
+      case "ArrowUp":
+        this.snake.changeDirection("up");
+        break;
+      case "ArrowDown":
+        this.snake.changeDirection("down");
+        break;
+      case "ArrowLeft":
+        this.snake.changeDirection("left");
+        break;
+      case "ArrowRight":
+        this.snake.changeDirection("right");
+        break;
+    }
   }
 }
 
