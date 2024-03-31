@@ -56,10 +56,34 @@ class Board {
 class Snake {
   constructor() {
     this.body = [{ x: 10, y: 10 }];
+    this.direction = "right";
   }
 
   getBody() {
     return this.body;
+  }
+
+  getDirection() {
+    return this.direction;
+  }
+
+  updateBody() {
+    for (let i = 0; i < this.body.length; i++) {
+      switch (this.direction) {
+        case "right":
+          this.body[i].x += 1;
+          break;
+        case "left":
+          this.body[i].x -= 1;
+          break;
+        case "up":
+          this.body[i].y -= 1;
+          break;
+        case "down":
+          this.body[i].y += 1;
+          break;
+      }
+    }
   }
 }
 
@@ -73,6 +97,7 @@ class SnakeGame {
   }
 
   update() {
+    this.snake.updateBody();
     this.board.setSnakeBody(this.snake.getBody());
     this.board.drawGrid();
   }
