@@ -5,6 +5,7 @@ class Board {
     this.cellSize = 20;
     this.rows = 20;
     this.cols = 20;
+    this.apple = null;
     this.snakeBody = [];
     this.initialize();
   }
@@ -15,8 +16,34 @@ class Board {
     this.drawGrid();
   }
 
+  hasFoodCollision() {
+    if (this.hasApple()) {
+      for (let i = 0; i < this.snakeBody.length - 1; i++) {
+        if (
+          this.apple.x === this.snakeBody[i].x &&
+          this.apple.y === this.snakeBody[i].y
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  getRows() {
+    return this.rows;
+  }
+
   setSnakeBody(snakeBody) {
     this.snakeBody = snakeBody;
+  }
+
+  setApple(apple) {
+    this.apple = apple;
+  }
+
+  hasApple() {
+    return this.apple !== null;
   }
 
   drawGrid() {
@@ -43,20 +70,25 @@ class Board {
         this.cellSize,
       );
     });
+
+    if (this.hasApple()) {
+      this.context.fillStyle = "red";
+      this.context.fillRect(
+        this.apple.x * this.cellSize,
+        this.apple.y * this.cellSize,
+        this.cellSize,
+        this.cellSize,
+      );
+    }
   }
 }
 
-//snake class
-//generate a snake with length
-//track length
-//increase length using food collision
-//check collisions
-//move snake in current direction
-//track current directions and change current directions using arrows
-
 class Snake {
   constructor() {
-    this.body = [{ x: 10, y: 10 }];
+    this.body = [
+      { x: 10, y: 10 },
+      { x: 11, y: 10 },
+    ];
     this.direction = "right";
   }
 
@@ -66,6 +98,10 @@ class Snake {
 
   getDirection() {
     return this.direction;
+  }
+
+  getHead() {
+    return this.body[this.body.length - 1];
   }
 
   changeDirection(newDirection) {
@@ -80,22 +116,49 @@ class Snake {
   }
 
   updateBody() {
-    for (let i = 0; i < this.body.length; i++) {
-      switch (this.direction) {
-        case "right":
-          this.body[i].x += 1;
-          break;
-        case "left":
-          this.body[i].x -= 1;
-          break;
-        case "up":
-          this.body[i].y -= 1;
-          break;
-        case "down":
-          this.body[i].y += 1;
-          break;
-      }
+    switch (this.direction) {
+      case "right":
+        this.body.push({
+          x: this.getHead().x + 1,
+          y: this.getHead().y,
+        });
+        this.body.shift();
+        break;
+      case "left":
+        this.body.push({
+          x: this.getHead().x - 1,
+          y: this.getHead().y,
+        });
+        this.body.shift();
+        break;
+      case "up":
+        this.body.push({
+          x: this.getHead().x,
+          y: this.getHead().y - 1,
+        });
+        this.body.shift();
+        break;
+      case "down":
+        this.body.push({
+          x: this.getHead().x,
+          y: this.getHead().y + 1,
+        });
+        this.body.shift();
+        break;
     }
+  }
+}
+
+class Apple {
+  constructor(boardSize) {
+    this.position = {
+      x: Math.floor(Math.random() * (boardSize + 1)),
+      y: Math.floor(Math.random() * (boardSize + 1)),
+    };
+  }
+
+  getPosition() {
+    return this.position;
   }
 }
 
@@ -109,9 +172,22 @@ class SnakeGame {
     this.update();
   }
 
+  getScore() {
+    return this.snake.getBody().length;
+  }
+
   update() {
     this.snake.updateBody();
     this.board.setSnakeBody(this.snake.getBody());
+
+    if (!this.board.hasApple()) {
+      this.board.setApple(new Apple(this.board.getRows()).getPosition());
+    }
+
+    if (this.board.hasFoodCollision()) {
+      this.board.setApple(null);
+    }
+
     this.board.drawGrid();
   }
 
