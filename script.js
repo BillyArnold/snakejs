@@ -92,6 +92,13 @@ class Snake {
     this.direction = "right";
   }
 
+  increaseLength() {
+    this.body.unshift({
+      x: -1,
+      y: -1,
+    });
+  }
+
   getBody() {
     return this.body;
   }
@@ -186,6 +193,7 @@ class SnakeGame {
 
     if (this.board.hasFoodCollision()) {
       this.board.setApple(null);
+      this.snake.increaseLength();
     }
 
     this.board.drawGrid();
