@@ -8,7 +8,7 @@ class Board {
     this.apple = null;
     this.snakeBody = [];
     this.initialize();
-  }
+  } 
 
   initialize() {
     this.canvas.width = this.cellSize * this.cols;
